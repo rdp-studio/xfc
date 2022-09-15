@@ -1,0 +1,30 @@
+ name: CI
+ 
+ on:
+   workflow_dispatch:
+ 
+ jobs:
+   build:
+     runs-on: ubuntu-latest
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         token: ${{ secrets.GHPAT }}
+         repository: "rdp-studio/xfc-private"
+
+     - name: Build
+       run: |
+         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-windows:latest 'pyinstaller -F --clean -y --dist ./dist/windows/ --workpath /tmp wallet.py'
+         zip -r $GITHUB_WORKSPACE/wallet-win.zip $GITHUB_WORKSPACE/dist/windows/wallet.exe
+         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-linux:latest 'pyinstaller -F --clean -y --dist ./dist/linux/ --workpath /tmp wallet.py'
+         zip -r $GITHUB_WORKSPACE/wallet-linux.zip $GITHUB_WORKSPACE/dist/linux/wallet
+
+     - uses: actions/upload-artifact@v2
+       with:
+          name: Windows
+          path: ${{ github.workspace }}/wallet-win.zip
+
+     - uses: actions/upload-artifact@v2
+       with:
+          name: Linux
+          path: ${{ github.workspace }}/wallet-linux.zip
