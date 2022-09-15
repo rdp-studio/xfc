@@ -46,7 +46,7 @@
 
      - name: Build
        run: |
-         pip install pyinstaller
+         pip install pyinstaller requests
          pyinstaller -F --clean -y --dist ./dist/macos/ --workpath /tmp wallet.py
          zip -r $GITHUB_WORKSPACE/wallet-macos.zip $GITHUB_WORKSPACE/dist/macos/wallet
 
