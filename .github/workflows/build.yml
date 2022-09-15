@@ -17,9 +17,9 @@
 
      - name: Build
        run: |
-         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-windows:latest 'pyinstaller -F --clean -y --dist ./dist/windows/ --workpath /tmp wallet.py'
+         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-windows:latest 'pip install requests && pyinstaller -F --clean -y --dist ./dist/windows/ --workpath /tmp wallet.py'
          zip -r $GITHUB_WORKSPACE/wallet-win.zip $GITHUB_WORKSPACE/dist/windows/wallet.exe
-         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-linux:latest 'pyinstaller -F --clean -y --dist ./dist/linux/ --workpath /tmp wallet.py'
+         docker run -v $GITHUB_WORKSPACE:/src cdrx/pyinstaller-linux:latest 'pip install requests && pyinstaller -F --clean -y --dist ./dist/linux/ --workpath /tmp wallet.py'
          zip -r $GITHUB_WORKSPACE/wallet-linux.zip $GITHUB_WORKSPACE/dist/linux/wallet
 
      - uses: actions/upload-artifact@v2
