@@ -7,7 +7,7 @@
       - main
  
  jobs:
-   build:
+   build-non-mac:
      runs-on: ubuntu-latest
      steps:
      - uses: actions/checkout@v2
@@ -31,3 +31,26 @@
        with:
           name: Linux
           path: ${{ github.workspace }}/wallet-linux.zip
+
+   build-mac:
+     runs-on: macos-latest
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         token: ${{ secrets.GHPAT }}
+         repository: "rdp-studio/xfc-private"
+
+     - uses: actions/setup-python@v4 
+       with:
+         python-version: '3.7' 
+
+     - name: Build
+       run: |
+         pip install pyinstaller
+         pyinstaller -F --clean -y --dist ./dist/macos/ --workpath /tmp wallet.py
+         zip -r $GITHUB_WORKSPACE/wallet-macos.zip $GITHUB_WORKSPACE/dist/macos/wallet
+
+     - uses: actions/upload-artifact@v2
+       with:
+          name: MacOS
+          path: ${{ github.workspace }}/wallet-macos.zip
